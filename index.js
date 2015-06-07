@@ -54,7 +54,7 @@ Object.defineProperty(module.exports, 'engine', {
       dust.onLoad = function (name, callback) {
         var content;
 
-        if(typeof options.settings.views == 'string') {
+        if(typeof options.settings.views === 'string') {
           content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString();
         }
         else {
