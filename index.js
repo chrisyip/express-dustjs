@@ -61,7 +61,7 @@ Object.defineProperty(module.exports, 'engine', {
           var filePaths = path.resolve(options.settings.views + name + ext);
           filePaths = filePaths.split(',');
           for(var i = 0; i < filePaths.length; i++) {
-            if(filePaths[i].indexOf(ext) != -1) {
+            if(filePaths[i].indexOf(ext) !== -1) {
               content = fs.readFileSync(filePaths[i]).toString();
               break;
             }
