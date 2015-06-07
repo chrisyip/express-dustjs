@@ -52,7 +52,22 @@ Object.defineProperty(module.exports, 'engine', {
       }
 
       dust.onLoad = function (name, callback) {
-        var content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString()
+        var content;
+
+        if(options.settings.views instanceof String) {
+          content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString();
+        }
+        else {
+          var filePaths = path.resolve(options.settings.views + name + ext);
+          filePaths = filePaths.split(',');
+          for(var i = 0; i < filePaths.length; i++) {
+            if(filePaths[i].indexOf(ext) != -1) {
+              content = fs.readFileSync(filePaths[i]).toString();
+              break;
+            }
+          }
+        }
+
         callback(null, content)
       }
 
