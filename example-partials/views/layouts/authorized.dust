@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{title}</title>
+    <meta charset="UTF-8"/>
+</head>
+<body>
+
+{+header}
+    <header>
+        <h1>Default Header</h1>
+    </header>
+{/header}
+{+body /}
+{+footer}
+    <footer>
+        Default Footer
+    </footer>
+{/footer}
+</body>
+</html>

@@ -9,6 +9,7 @@ var Promise = require('bluebird')
 /* jshint +W079 */
 
 require('../example/app.js')
+require('../example-partials/app.js')
 
 function req (url, cb) {
   return request.get('http://localhost:3000/' + url, cb)
@@ -17,6 +18,14 @@ function req (url, cb) {
 describe('dust', function () {
   it('should work', function (done) {
     req('', function (err, response, body) {
+      assert.equal(response.statusCode, 200)
+      assert.equal(body.indexOf('Hello world') > -1, true)
+      done()
+    })
+  })
+
+  it('should work when views is set to an array', function(done) {
+    request.get('http://localhost:3001/partial-example', function(err, response, body) {
       assert.equal(response.statusCode, 200)
       assert.equal(body.indexOf('Hello world') > -1, true)
       done()

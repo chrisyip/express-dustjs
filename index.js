@@ -52,18 +52,19 @@ Object.defineProperty(module.exports, 'engine', {
       }
 
       dust.onLoad = function (name, callback) {
-        var content;
+        var content
 
         if(typeof options.settings.views === 'string') {
-          content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString();
+          content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString()
         }
         else {
-          var filePaths = path.resolve(options.settings.views + name + ext);
-          filePaths = filePaths.split(',');
-          for(var i = 0; i < filePaths.length; i++) {
-            if(filePaths[i].indexOf(ext) !== -1) {
-              content = fs.readFileSync(filePaths[i]).toString();
-              break;
+          var viewPaths = options.settings.views
+
+          for(var i = 0; i < viewPaths.length; i++) {
+            var viewPath =  path.resolve(viewPaths[i], name) + ext
+            if(fs.existsSync(viewPath)) {
+              content = fs.readFileSync(viewPath).toString()
+              break
             }
           }
         }

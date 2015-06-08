@@ -1,0 +1,11 @@
+{>"authorized" /}
+
+{<header}
+    {> "header" /}
+{/header}
+{<body}
+    This is the home page
+{/body}
+{<footer}
+    {> "footer" /}
+{/footer}
