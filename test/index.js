@@ -25,9 +25,10 @@ describe('dust', function () {
   })
 
   it('should work when views is set to an array', function(done) {
-    request.get('http://localhost:3001/partial-example', function(err, response, body) {
+    request.get('http://localhost:3001/home', function(err, response, body) {
+      console.log(response.statusCode);
       assert.equal(response.statusCode, 200)
-      assert.equal(body.indexOf('Hello world') > -1, true)
+      assert.equal(body.indexOf('Welcome back') > -1, true)
       done()
     })
   })
