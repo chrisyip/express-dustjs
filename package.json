@@ -4,7 +4,7 @@
   "description": "DustJS middleware for ExpressJS",
   "main": "index.js",
   "scripts": {
-    "gulp": "./node_modules/gulp/bin/gulp.js",
+    "gulp": "node ./node_modules/gulp/bin/gulp.js",
     "mocha": "node --harmony node_modules/mocha/bin/_mocha --reporter nyan --bail --check-leaks test/*.js",
     "mocha:cov": "node --harmony node_modules/istanbul/lib/cli.js cover node_modules/mocha/bin/_mocha -- --reporter spec --check-leaks test/*.js",
     "test": "npm run gulp && npm run mocha",
@@ -29,8 +29,8 @@
   },
   "homepage": "https://github.com/chrisyip/express-dustjs",
   "dependencies": {
-    "dustjs-helpers": "^1.5.0",
-    "dustjs-linkedin": "^2.5.1",
+    "dustjs-helpers": "1.5.0",
+    "dustjs-linkedin": "2.5.1",
     "lodash": "^2.4.1"
   },
   "devDependencies": {

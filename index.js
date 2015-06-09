@@ -52,7 +52,23 @@ Object.defineProperty(module.exports, 'engine', {
       }
 
       dust.onLoad = function (name, callback) {
-        var content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString()
+        var content
+
+        if(typeof options.settings.views === 'string') {
+          content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString()
+        }
+        else {
+          var viewPaths = options.settings.views
+
+          for(var i = 0; i < viewPaths.length; i++) {
+            var viewPath =  path.resolve(viewPaths[i], name) + ext
+            if(fs.existsSync(viewPath)) {
+              content = fs.readFileSync(viewPath).toString()
+              break
+            }
+          }
+        }
+
         callback(null, content)
       }
 
