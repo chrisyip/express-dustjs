@@ -46,8 +46,8 @@ describe('dust', function () {
           throw new Error('Status code should be 500, saw', res.statusCode)
         }
 
-        if (!(_.contains(res.text, 'no such file or directory') && _.contains(res.text, 'layout-not-exist'))) {
-          throw new Error('Should throw file not found error')
+        if (!(_.contains(res.text, 'ENOENT') && _.contains(res.text, 'layout-not-exist'))) {
+          throw new Error('Should throw file not found error, but saw\n' + res.text)
         }
       })
       .expect(500, done)
