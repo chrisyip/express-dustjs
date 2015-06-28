@@ -2,61 +2,83 @@
 
 var assert = require('assert')
 
-var request = require('request')
+var request = require('supertest')
 
-/* jshint -W079 */
-var Promise = require('bluebird')
-/* jshint +W079 */
+var _ = require('lodash')
 
-require('../example/app.js')
+var path = require('path')
 
-function req (url, cb) {
-  return request.get('http://localhost:3000/' + url, cb)
+var app = require('../example/app.js')
+
+var req = request(app)
+
+function contains (substr) {
+  return function (res) {
+    if (!_.contains(res.text, substr)) {
+      throw new Error('Can not found "' + substr + '"')
+    }
+  }
+}
+
+function notContains (substr) {
+  return function (res) {
+    if (_.contains(res.text, substr)) {
+      throw new Error('"' + substr + '" should not exist')
+    }
+  }
 }
 
 describe('dust', function () {
   it('should work', function (done) {
-    req('', function (err, response, body) {
-      assert.equal(response.statusCode, 200)
-      assert.equal(body.indexOf('Hello world') > -1, true)
-      done()
-    })
+    req.get('/')
+      .expect(contains('Hello world'))
+      .end(done)
   })
 
   it('should support variables', function (done) {
-    req('', function (err, response, body) {
-      assert.equal(response.statusCode, 200)
-      assert.equal(body.indexOf('Joe') > -1, true)
-      done()
-    })
+    req.get('/')
+      .expect(contains('Joe'))
+      .end(done)
+  })
+
+  it('should throw error when partial not found', function (done) {
+    req.get('/partial-not-found')
+      .expect(function (res) {
+        if (res.statusCode !== 500) {
+          throw new Error('Status code should be 500, saw', res.statusCode)
+        }
+
+        if (!(_.contains(res.text, 'no such file or directory') && _.contains(res.text, 'layout-not-exist'))) {
+          throw new Error('Should throw file not found error')
+        }
+      })
+      .expect(500, done)
   })
 
   it('should support binding other Dustjs instance', function (done) {
     require('../')(require('dustjs-linkedin'))
 
-    req('', function (err, response) {
-      assert.equal(response.statusCode, 200)
-      done()
-    })
+    var app = require('express')()
+    app.set('view engine', 'dust')
+    app.set('views', path.resolve(__dirname, '../example/views'))
+    app.get('/', function () { this.render('index') })
+
+    req.get('/').expect(contains('Hello world')).expect(200, done)
   })
 
   it('should throw exception', function (done) {
-    req('error', function (err, response, body) {
-      assert.equal(response.statusCode, 500)
-      assert.equal(body.indexOf('Runtime error') > -1, true)
-      done()
-    })
+    req.get('/error').expect(500).expect(contains('Runtime error')).end(done)
+  })
+
+  it('should support array for view paths', function (done) {
+    req.get('/foo?name=John').expect(200).expect(contains('Hello, John')).end(done)
   })
 })
 
 describe('dust.bind', function () {
   it('should support binding other Dustjs instance', function (done) {
     require('../').bind(require('dustjs-linkedin'))
-
-    req('', function (err, response) {
-      assert.equal(response.statusCode, 200)
-      done()
-    })
+    req.get('/').expect(200).end(done)
   })
 
   it('should do nothing with passing non-object value', function () {
@@ -70,34 +92,16 @@ describe('dust.bind', function () {
 
 describe('dust.helpers', function () {
   it('should support custom helpers', function (done) {
-    req('', function (err, response, body) {
-      assert.equal(response.statusCode, 200)
-      assert.equal(body.indexOf('THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG') > -1, true)
-      done()
-    })
+    req.get('/').expect(200)
+      .expect(contains('THE QUICK BROWN FOX JUMPS OVER THE LAZY DOG'))
+      .end(done)
   })
 
   it('should support dustjs-helpers', function (done) {
-    Promise.all([
-      new Promise(function (res) {
-        req('', function (err, response, body) {
-          assert.equal(response.statusCode, 200)
-          assert.equal(body.indexOf('bar') > -1, true)
-          assert.equal(body.indexOf('foo') === -1, true)
-          res()
-        })
-      }),
-
-      new Promise(function (res) {
-        req('?number=6', function (err, response, body) {
-          assert.equal(response.statusCode, 200)
-          assert.equal(body.indexOf('foo') > -1, true)
-          assert.equal(body.indexOf('bar') === -1, true)
-          res()
-        })
-      })
-    ]).then(function () {
-      done()
-    })
+    req.get('/?number=6')
+      .expect(200)
+      .expect(contains('foo'))
+      .expect(notContains('bar'))
+      .end(done)
   })
 })

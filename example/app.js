@@ -14,7 +14,7 @@ app.engine('dust', dust.engine({
   useHelpers: true
 }))
 app.set('view engine', 'dust')
-app.set('views', path.resolve(__dirname, './views'))
+app.set('views', [path.resolve(__dirname, './views'), path.resolve(__dirname, './other-views')])
 
 app.get('/', function (req, res) {
   res.render('index', {
@@ -33,4 +33,16 @@ app.get('/error', function (req, res) {
   res.render('error')
 })
 
+app.get('/foo', function (req, res) {
+  res.render('foo', {
+    name: req.query.name
+  })
+})
+
+app.get('/partial-not-found', function (req, res) {
+  res.render('partial-not-found')
+})
+
 app.listen(3000)
+
+module.exports = app

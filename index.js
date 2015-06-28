@@ -1,5 +1,6 @@
 var _ = require('lodash')
-var fs = require('fs')
+var Promise = require('bluebird')
+var fs = Promise.promisifyAll(require('fs'))
 var path = require('path')
 
 var cache = {}
@@ -12,6 +13,22 @@ var defaultOptions = {
 var defaultDust = require('dustjs-linkedin')
 
 var dust = defaultDust
+
+function readContentFromPaths (paths, name, ext) {
+  return new Promise(function (resolve, reject) {
+    var _path = paths.shift()
+    fs.readFileAsync(path.resolve(_path, name) + ext)
+      .then(function (content) {
+        resolve(content.toString())
+      }, function (err) {
+        if (paths.length) {
+          return resolve(readContentFromPaths(paths, name, ext))
+        }
+
+        reject(err)
+      })
+  })
+}
 
 module.exports = function (dustjs) {
   return module.exports.bind(dustjs)
@@ -52,13 +69,13 @@ Object.defineProperty(module.exports, 'engine', {
       }
 
       dust.onLoad = function (name, callback) {
-        var content = fs.readFileSync(path.resolve(options.settings.views, name) + ext).toString()
-        callback(null, content)
+        readContentFromPaths([].concat(options.settings.views), name, ext)
+          .then(function (content) {
+            callback(null, content)
+          }, callback)
       }
 
-      var context = dust.makeBase(options)
-
-      compiler(context, function (err, content) {
+      compiler(options, function (err, content) {
         if (err) {
           return callback(err)
         }

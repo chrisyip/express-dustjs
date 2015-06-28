@@ -29,12 +29,12 @@
   },
   "homepage": "https://github.com/chrisyip/express-dustjs",
   "dependencies": {
-    "dustjs-helpers": "^1.5.0",
-    "dustjs-linkedin": "^2.5.1",
-    "lodash": "^2.4.1"
+    "bluebird": "^2.9.30",
+    "dustjs-helpers": "^1.7.0",
+    "dustjs-linkedin": "^2.7.0",
+    "lodash": "^3.9.0"
   },
   "devDependencies": {
-    "bluebird": "^2.8.1",
     "express": "^4.11.0",
     "gulp": "^3.8.10",
     "gulp-jshint": "^1.9.0",
@@ -42,6 +42,7 @@
     "jshint": "^2.5.11",
     "jshint-stylish": "^1.0.0",
     "mocha": "^2.1.0",
-    "request": "^2.51.0"
+    "request": "^2.51.0",
+    "supertest": "^1.0.1"
   }
 }
