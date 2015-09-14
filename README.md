@@ -2,7 +2,7 @@
 
 A [Dustjs] middleware for [Express](http://expressjs.com/).
 
-[![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Travis CI][travis-image]][travis-url] [![Coveralls][coveralls-image]][coveralls-url]
+[![NPM version][npm-image]][npm-url] [![Dependency Status][daviddm-image]][daviddm-url] [![Travis CI][travis-image]][travis-url] [![Coveralls][codecov-image]][codecov-url]
 
 # Installation
 
@@ -99,8 +99,8 @@ Via [GitHub](https://github.com/chrisyip/express-dustjs/graphs/contributors)
 [daviddm-image]: http://img.shields.io/david/chrisyip/express-dustjs.svg?style=flat-square
 [travis-url]: https://travis-ci.org/chrisyip/express-dustjs
 [travis-image]: http://img.shields.io/travis/chrisyip/express-dustjs.svg?style=flat-square
-[coveralls-url]: https://coveralls.io/r/chrisyip/express-dustjs
-[coveralls-image]: http://img.shields.io/coveralls/chrisyip/express-dustjs.svg?style=flat-square
+[codecov-url]: https://codecov.io/github/chrisyip/express-dustjs
+[codecov-image]: https://img.shields.io/codecov/c/github/chrisyip/express-dustjs.svg?style=flat-square
 [Dustjs]: http://linkedin.github.io/dustjs
 [dustjs-linkedin]: http://linkedin.github.io/dustjs
 [dustjs-helpers]: https://github.com/linkedin/dustjs-helpers
