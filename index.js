@@ -66,6 +66,10 @@ Object.defineProperty(module.exports, 'engine', {
       if (!_.isFunction(compiler)) {
         var content = fs.readFileSync(file).toString()
         compiler = dust.compileFn(content)
+
+        if (dustOptions.cache) {
+          cache[file] = compiler
+        }
       }
 
       dust.onLoad = function (name, callback) {
