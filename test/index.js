@@ -2,17 +2,25 @@ var assert = require('assert')
 
 var request = require('supertest')
 
-var _ = require('lodash')
-
 var path = require('path')
 
 var app = require('../example/app.js')
 
 var req = request(app)
 
+
+function includes (a, b) {
+  if (typeof a === "string") {
+    return a.indexOf(b) > -1
+  }
+
+  return false
+}
+
+
 function contains (substr) {
   return function (res) {
-    if (!_.includes(res.text, substr)) {
+    if (!includes(res.text, substr)) {
       throw new Error('Can not found "' + substr + '"')
     }
   }
@@ -20,7 +28,7 @@ function contains (substr) {
 
 function notContains (substr) {
   return function (res) {
-    if (_.includes(res.text, substr)) {
+    if (includes(res.text, substr)) {
       throw new Error('"' + substr + '" should not exist')
     }
   }
@@ -46,7 +54,7 @@ describe('dust', function () {
           throw new Error('Status code should be 500, saw', res.statusCode)
         }
 
-        if (!(_.includes(res.text, 'ENOENT') && _.includes(res.text, 'layout-not-exist'))) {
+        if (!(includes(res.text, 'ENOENT') && includes(res.text, 'layout-not-exist'))) {
           throw new Error('Should throw file not found error, but saw\n' + res.text)
         }
       })

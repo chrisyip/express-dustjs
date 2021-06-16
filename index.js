@@ -1,7 +1,7 @@
-var _ = require('lodash')
-var Promise = require('bluebird')
-var fs = Promise.promisifyAll(require('fs'))
+var Promise = require('core-js-pure/features/promise')
+var fs = require('fs')
 var path = require('path')
+var merge = require('merge')
 
 var cache = {}
 
@@ -17,16 +17,19 @@ var dust = defaultDust
 function readContentFromPaths (paths, name, ext) {
   return new Promise(function (resolve, reject) {
     var _path = paths.shift()
-    fs.readFileAsync(path.resolve(_path, name) + ext)
-      .then(function (content) {
-        resolve(content.toString())
-      }, function (err) {
+    fs.readFile(path.resolve(_path, name) + ext, function (err, content) {
+      if (err) {
         if (paths.length) {
-          return resolve(readContentFromPaths(paths, name, ext))
+          resolve(readContentFromPaths(paths, name, ext))
+          return
         }
 
         reject(err)
-      })
+        return
+      }
+
+      resolve(content.toString())
+    })
   })
 }
 
@@ -37,7 +40,7 @@ module.exports = function (dustjs) {
 Object.defineProperty(module.exports, 'bind', {
   enumerable: true,
   value: function (dustjs) {
-    if (!_.isPlainObject(dustjs)) {
+    if (typeof dustjs !== 'object' || dustjs == null) {
       dust = require('dustjs-linkedin')
     }
 
@@ -48,7 +51,7 @@ Object.defineProperty(module.exports, 'bind', {
 Object.defineProperty(module.exports, 'engine', {
   emuerable: true,
   value: function (opts) {
-    var dustOptions = _.merge({}, defaultOptions, opts)
+    var dustOptions = merge.recursive(true, defaultOptions, opts)
 
     if (dustOptions.useHelpers) {
       require('dustjs-helpers')
@@ -63,7 +66,7 @@ Object.defineProperty(module.exports, 'engine', {
 
       var ext = '.' + (options.ext || dustOptions.ext)
 
-      if (!_.isFunction(compiler)) {
+      if (typeof compiler !== 'function') {
         var content = fs.readFileSync(file).toString()
         compiler = dust.compileFn(content)
 
