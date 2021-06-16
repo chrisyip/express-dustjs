@@ -1,6 +1,6 @@
 {
   "name": "express-dustjs",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "DustJS middleware for ExpressJS",
   "main": "index.js",
   "scripts": {
@@ -30,7 +30,7 @@
     "bluebird": "^2.9.30",
     "dustjs-helpers": "^1.7.0",
     "dustjs-linkedin": "^2.7.0",
-    "lodash": "^3.9.0"
+    "lodash": "^4.17.21"
   },
   "devDependencies": {
     "eslint": "^0.24.0",

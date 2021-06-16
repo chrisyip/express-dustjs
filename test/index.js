@@ -12,7 +12,7 @@ var req = request(app)
 
 function contains (substr) {
   return function (res) {
-    if (!_.contains(res.text, substr)) {
+    if (!_.includes(res.text, substr)) {
       throw new Error('Can not found "' + substr + '"')
     }
   }
@@ -20,7 +20,7 @@ function contains (substr) {
 
 function notContains (substr) {
   return function (res) {
-    if (_.contains(res.text, substr)) {
+    if (_.includes(res.text, substr)) {
       throw new Error('"' + substr + '" should not exist')
     }
   }
@@ -46,7 +46,7 @@ describe('dust', function () {
           throw new Error('Status code should be 500, saw', res.statusCode)
         }
 
-        if (!(_.contains(res.text, 'ENOENT') && _.contains(res.text, 'layout-not-exist'))) {
+        if (!(_.includes(res.text, 'ENOENT') && _.includes(res.text, 'layout-not-exist'))) {
           throw new Error('Should throw file not found error, but saw\n' + res.text)
         }
       })
